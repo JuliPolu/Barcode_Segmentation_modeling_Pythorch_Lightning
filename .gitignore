@@ -1,0 +1,15 @@
+.ipynb_checkpoints
+__pycache__
+
+HW_01_example/
+configs/
+README.md
+
+src/datamodule.py
+
+venv/
+data/images/
+
+.vscode
+.DS_Store
+src\__pycache__
