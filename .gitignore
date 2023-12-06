@@ -5,8 +5,6 @@ HW_01_example/
 configs/
 README.md
 
-src/datamodule.py
-
 venv/
 data/images/
 

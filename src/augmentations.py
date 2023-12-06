@@ -2,6 +2,7 @@ from typing import Union
 
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
+import segmentation_models_pytorch as smp
 
 TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 
@@ -10,19 +11,22 @@ def get_transforms(
     width: int,
     height: int,
     preprocessing: bool = True,
+    encoder = None,
+    pretrained: str = "imagenet",
     augmentations: bool = True,
     postprocessing: bool = True,
 ) -> TRANSFORM_TYPE:
+    
     transforms = []
-
+    
     if preprocessing:
+        preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder, pretrained)
+        transforms.append(albu.Lambda(image=preprocessing_fn))
         transforms.append(albu.Resize(height=height, width=width))
 
     if augmentations:
         transforms.extend(
             [
-                albu.HorizontalFlip(p=0.5),
-                albu.VerticalFlip(p=0.5),
                 albu.ShiftScaleRotate(
                         shift_limit=0.1,
                         scale_limit=(-0.05, 0.05),
@@ -48,6 +52,6 @@ def get_transforms(
         )
 
     if postprocessing:
-        transforms.extend([albu.Normalize(), ToTensorV2()])
+        transforms.extend([ToTensorV2()])
 
     return albu.Compose(transforms)

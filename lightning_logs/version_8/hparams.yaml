@@ -1,0 +1,76 @@
+config: !!python/object:config.Config
+  __dict__:
+    accelerator: gpu
+    data_config: !!python/object:config.DataConfig
+      __dict__:
+        batch_size: 32
+        data_path: ./data
+        encoder_name: resnet34
+        height: 224
+        n_workers: 8
+        train_size: 0.8
+        width: 224
+      __fields_set__: !!set
+        batch_size: null
+        data_path: null
+        encoder_name: null
+        height: null
+        n_workers: null
+        train_size: null
+        width: null
+      __private_attribute_values__: {}
+    device: 0
+    experiment_name: unet_exp1_lovasz
+    losses:
+    - !!python/object:config.LossConfig
+      __dict__:
+        loss_fn: loss_seg.LovaszLoss
+        name: lovasz
+        weight: 1.0
+      __fields_set__: !!set
+        loss_fn: null
+        name: null
+        weight: null
+      __private_attribute_values__: {}
+    metrics_average: macro
+    model_kwargs:
+      arch: Unet
+      classes: 1
+      encoder_name: resnet34
+      encoder_weights: imagenet
+      in_channels: 3
+    monitor_metric: val_IoU
+    monitor_mode: max
+    n_epochs: 40
+    num_classes: 17
+    optimizer: torch.optim.AdamW
+    optimizer_kwargs:
+      lr: 0.001
+      weight_decay: 1.0e-05
+    project_name: Segmentation_Barcodes
+    scheduler: torch.optim.lr_scheduler.ReduceLROnPlateau
+    scheduler_kwargs:
+      factor: 0.5
+      min_lr: 1.0e-05
+      mode: min
+      patience: 20
+    threshold: 0.5
+  __fields_set__: !!set
+    accelerator: null
+    data_config: null
+    device: null
+    experiment_name: null
+    losses: null
+    metrics_average: null
+    model_kwargs: null
+    monitor_metric: null
+    monitor_mode: null
+    n_epochs: null
+    num_classes: null
+    optimizer: null
+    optimizer_kwargs: null
+    project_name: null
+    scheduler: null
+    scheduler_kwargs: null
+    threshold: null
+  __private_attribute_values__: {}

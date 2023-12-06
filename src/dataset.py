@@ -12,11 +12,11 @@ TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 class SegmentationDataset(Dataset):
     def __init__(self,
         dataframe: pd.DataFrame,
-        image_dir: str,
+        image_folder: str,
         transforms: Optional[TRANSFORM_TYPE] = None,
     ):
         self.dataframe = dataframe
-        self.image_dir = image_dir
+        self.image_folder = image_folder
         self.transforms = transforms
 
     def __len__(self):
@@ -26,7 +26,8 @@ class SegmentationDataset(Dataset):
         row = self.dataframe.iloc[idx]
         
         # Load image
-        image_path = os.path.join(self.image_dir, row['filename'])
+        image_path = os.path.normpath(os.path.join(self.image_folder, row['filename']))
+        
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -42,4 +43,4 @@ class SegmentationDataset(Dataset):
             
 
         return transformed_image, transformed_mask
-
+    
