@@ -2,8 +2,10 @@
 __pycache__
 
 HW_01_example/
-configs/
 README.md
+experiments/
+lightning_logs/
+segmentation_test.ipynb
 
 venv/
 data/images/

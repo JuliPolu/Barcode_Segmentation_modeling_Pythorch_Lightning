@@ -1,4 +1,5 @@
 from typing import Union
+import numpy as np
 
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
@@ -6,6 +7,8 @@ import segmentation_models_pytorch as smp
 
 TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 
+def to_uint8(image, **kwargs):
+    return image.astype(np.uint8)
 
 def get_transforms(
     width: int,
@@ -20,8 +23,6 @@ def get_transforms(
     transforms = []
     
     if preprocessing:
-        preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder, pretrained)
-        transforms.append(albu.Lambda(image=preprocessing_fn))
         transforms.append(albu.Resize(height=height, width=width))
 
     if augmentations:
@@ -52,6 +53,8 @@ def get_transforms(
         )
 
     if postprocessing:
+        processing_smp = smp.encoders.get_preprocessing_fn(encoder, pretrained)
+        transforms.append(albu.Lambda(image=processing_smp))
         transforms.extend([ToTensorV2()])
 
     return albu.Compose(transforms)

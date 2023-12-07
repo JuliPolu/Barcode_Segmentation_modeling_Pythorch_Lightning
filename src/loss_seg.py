@@ -57,14 +57,15 @@ def jaccard(outputs, targets, per_image=False, non_empty=False, min_pixels=5):
 
 
 class DiceLoss(nn.Module):
-    def __init__(self, weight=None, size_average=True, per_image=False):
+    def __init__(self, weight=None, size_average=True, per_image=True):
         super().__init__()
         self.size_average = size_average
         self.register_buffer("weight", weight)
         self.per_image = per_image
 
     def forward(self, input, target):
-        return soft_dice_loss(input, target, per_image=self.per_image)
+        probs = torch.sigmoid(input)
+        return soft_dice_loss(probs, target, per_image=self.per_image)
 
 
 class JaccardLoss(nn.Module):
@@ -336,7 +337,8 @@ class FocalLoss2d(nn.Module):
         self.gamma = gamma
         self.ignore_index = ignore_index
 
-    def forward(self, outputs, targets):
+    def forward(self, logits, targets):
+        outputs = torch.sigmoid(logits)
         outputs = outputs.contiguous()
         targets = targets.contiguous()
         eps = 1e-8

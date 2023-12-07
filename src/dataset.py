@@ -35,12 +35,16 @@ class SegmentationDataset(Dataset):
         mask = np.zeros(image.shape[:2], dtype=np.uint8)
         x, y, w, h = row['x_from'], row['y_from'], row['width'], row['height']
         mask[y:y+h, x:x+w] = 1
+        mask = mask.astype(np.uint8)
         
         if self.transforms:
             transformed = self.transforms(image=image, mask=mask)
             transformed_image = transformed['image']
             transformed_mask = transformed['mask']
+            transformed_mask = transformed_mask.unsqueeze(0)
+        else:
+            transformed_image = image
+            transformed_mask = mask
             
-
         return transformed_image, transformed_mask
     

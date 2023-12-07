@@ -24,7 +24,6 @@ class Config(BaseModel):
     experiment_name: str
     data_config: DataConfig
     n_epochs: int
-    num_classes: int
     threshold: float
     metrics_average: str
     accelerator: str

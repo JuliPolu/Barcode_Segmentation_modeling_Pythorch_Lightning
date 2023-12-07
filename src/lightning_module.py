@@ -52,7 +52,6 @@ class SegmentModule(pl.LightningModule):
         """
         images, target = batch
         images, target = images.float(), target.float()
-        target = target.unsqueeze(1)
         pr_logits = self(images)
         return self._calculate_loss(pr_logits, target, 'train_')
 
@@ -62,7 +61,6 @@ class SegmentModule(pl.LightningModule):
         """
         images, target = batch
         images, target = images.float(), target.float()
-        target = target.unsqueeze(1)
         pr_logits = self(images)
         self._calculate_loss(pr_logits, target, 'val_')
         pr_labels = torch.sigmoid(pr_logits)
@@ -74,7 +72,6 @@ class SegmentModule(pl.LightningModule):
         """
         images, target = batch
         images, target = images.float(), target.float()
-        target = target.unsqueeze(1)
         pr_logits = self(images)
         pr_labels = torch.sigmoid(pr_logits)
         self._test_metrics(pr_labels, target)

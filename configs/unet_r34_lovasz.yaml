@@ -1,0 +1,54 @@
+project_name: 'Segmentation_Barcodes'
+experiment_name: 'unet_exp4_lovasz'
+n_epochs:  40
+accelerator: 'gpu'
+device: 0
+monitor_metric: 'val_IoU'
+monitor_mode: 'max'
+threshold: 0.3
+metrics_average: 'macro'
+
+
+model_kwargs:
+    arch: 'Unet'
+    encoder_name: 'resnet34'
+    encoder_weights: "imagenet"
+    in_channels: 3
+    classes: 1
+    
+  # encoder_name: timm-efficientnet-b3
+  # classes: 1
+  # encoder_weights: noisy-student
+
+
+optimizer: 'torch.optim.AdamW'
+optimizer_kwargs:
+  lr: 1e-3
+  weight_decay: 1e-5
+
+scheduler: 'torch.optim.lr_scheduler.CosineAnnealingLR'
+scheduler_kwargs:
+  T_max: 10
+  eta_min: 1e-5
+
+# scheduler: 'torch.optim.lr_scheduler.ReduceLROnPlateau'
+# scheduler_kwargs:
+#   mode: 'min'
+#   factor: 0.5
+#   patience: 20
+#   min_lr: 1e-5
+
+losses:
+  - name: 'lovasz'
+    weight: 1.0
+    loss_fn: 'loss_seg.LovaszLoss'
+
+
+data_config:
+  data_path: './data'
+  batch_size: 16
+  n_workers: 4
+  train_size: 0.8
+  width: 224
+  height: 224
+  encoder_name: 'resnet34'
