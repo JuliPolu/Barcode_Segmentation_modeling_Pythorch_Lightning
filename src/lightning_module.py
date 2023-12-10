@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import segmentation_models_pytorch as smp
 
+
 from config import Config
 from losses import get_losses
 from metrics import get_metrics
@@ -99,5 +100,3 @@ class SegmentModule(pl.LightningModule):
             self.log(f'{prefix}{cur_loss.name}_loss', loss.item())
         self.log(f'{prefix}total_loss', total_loss.item())
         return total_loss
-
-

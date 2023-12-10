@@ -1,5 +1,5 @@
 project_name: 'Segmentation_Barcodes'
-experiment_name: 'exp1_unet_dice_focal_resnet'
+experiment_name: 'FPN_exp2_r34_d_f_256_thr_0.4'
 n_epochs:  40
 accelerator: 'gpu'
 device: 0
@@ -10,17 +10,12 @@ metrics_average: 'macro'
 
 
 model_kwargs:
-    arch: 'Unet'
+    arch: 'FPN'
     encoder_name: 'resnet34'
     encoder_weights: "imagenet"
     in_channels: 3
     classes: 1
     
-  # encoder_name: timm-efficientnet-b3
-  # classes: 1
-  # encoder_weights: noisy-student
-
-
 optimizer: 'torch.optim.AdamW'
 optimizer_kwargs:
   lr: 1e-3
@@ -46,6 +41,6 @@ data_config:
   batch_size: 16
   n_workers: 4
   train_size: 0.8
-  width: 224
-  height: 224
+  width: 256
+  height: 256
   encoder_name: 'resnet34'

@@ -6,6 +6,7 @@ README.md
 experiments/
 lightning_logs/
 segmentation_test.ipynb
+HISTORY&COMMENTS.md
 
 venv/
 data/images/

@@ -20,7 +20,7 @@ def split_subsets(
 
     test_subset, valid_subset = train_test_split(
         test_val_subset, 
-        test_size=0.5,
+        test_size=0.25,
         random_state=100
     )
 
