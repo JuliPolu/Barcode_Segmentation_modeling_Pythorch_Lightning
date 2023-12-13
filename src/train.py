@@ -1,12 +1,10 @@
 import argparse
 import logging
 import os
-
 import torch
 import pytorch_lightning as pl
 from clearml import Task
 from pytorch_lightning.callbacks import EarlyStopping, LearningRateMonitor, ModelCheckpoint
-
 from config import Config
 from constants import EXPERIMENTS_PATH
 from datamodule import SegmentDM
@@ -51,7 +49,7 @@ def train(config: Config):
             LearningRateMonitor(logging_interval='epoch'),
         ],
     )
-    
+
     trainer.fit(model=model, datamodule=datamodule)
     trainer.test(ckpt_path=checkpoint_callback.best_model_path, datamodule=datamodule)
 
@@ -59,9 +57,7 @@ def train(config: Config):
 if __name__ == '__main__':
     args = arg_parse()
     logging.basicConfig(level=logging.INFO)
-    
     torch.set_float32_matmul_precision('medium')
-    
     pl.seed_everything(100, workers=True)
     config = Config.from_yaml(args.config_file)
     train(config)

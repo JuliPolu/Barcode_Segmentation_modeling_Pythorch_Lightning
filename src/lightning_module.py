@@ -1,6 +1,5 @@
 import pytorch_lightning as pl
 import torch
-import torch.nn as nn
 import segmentation_models_pytorch as smp
 
 
@@ -47,6 +46,8 @@ class SegmentModule(pl.LightningModule):
             },
         }
 
+        
+        
     def training_step(self, batch, batch_idx):
         """
         Считаем лосс.

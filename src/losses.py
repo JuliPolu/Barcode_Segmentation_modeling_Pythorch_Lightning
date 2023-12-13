@@ -1,13 +1,9 @@
 from dataclasses import dataclass
 from typing import List
-
-import torch
 from torch import nn
 import torch.nn.functional as F
-
 from config import LossConfig
 from utils import load_object
-
 
 
 @dataclass

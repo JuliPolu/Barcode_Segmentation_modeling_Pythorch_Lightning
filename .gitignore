@@ -1,5 +1,9 @@
 .ipynb_checkpoints
 __pycache__
+.vscode
+.DS_Stor
+
+
 
 HW_01_example/
 README.md
@@ -7,10 +11,11 @@ experiments/
 lightning_logs/
 segmentation_test.ipynb
 HISTORY&COMMENTS.md
+lightning_logs/
 
 venv/
 data/images/
 
-.vscode
-.DS_Store
-src\__pycache__
+*.ckpt
+*.pt
+*.onnx

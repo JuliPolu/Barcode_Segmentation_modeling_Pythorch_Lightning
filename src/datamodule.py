@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Tuple
+from typing import Optional
 
 import pandas as pd
 from pytorch_lightning import LightningDataModule
