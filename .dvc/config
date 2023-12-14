@@ -1,0 +1,8 @@
+[core]
+    remote = dvcremote
+[cache]
+    type = "hardlink,symlink"
+['remote "dvcremote"']
+    url = ssh://91.206.15.25/home/j.polushina/dvc_files
+    user = j.polushina
+    keyfile = /Users/aleksandrkrylov/.ssh/id_rsa_stage

@@ -1,0 +1,46 @@
+project_name: 'Segmentation_Barcodes'
+experiment_name: 'FPN_exp2_r34_d_f_256'
+n_epochs:  40
+accelerator: 'gpu'
+device: 0
+monitor_metric: 'val_IoU'
+monitor_mode: 'max'
+threshold: 0.5
+metrics_average: 'macro'
+
+
+model_kwargs:
+    arch: 'FPN'
+    encoder_name: 'resnet34'
+    encoder_weights: "imagenet"
+    in_channels: 3
+    classes: 1
+    
+optimizer: 'torch.optim.AdamW'
+optimizer_kwargs:
+  lr: 1e-3
+  weight_decay: 1e-5
+
+scheduler: 'torch.optim.lr_scheduler.ReduceLROnPlateau'
+scheduler_kwargs:
+  mode: 'min'
+  factor: 0.3
+  patience: 10
+  min_lr: 1e-5
+
+losses:
+  - name: 'Dice'
+    weight: 0.6
+    loss_fn: 'loss_seg.DiceLoss'
+  - name: 'Focal'
+    weight: 0.4
+    loss_fn: 'loss_seg.FocalLoss2d'
+
+data_config:
+  data_path: './data'
+  batch_size: 16
+  n_workers: 4
+  train_size: 0.8
+  width: 256
+  height: 256
+  encoder_name: 'resnet34'

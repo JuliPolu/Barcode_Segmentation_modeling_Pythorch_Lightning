@@ -1,0 +1,33 @@
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+__pycache__
+
+# VSCode
+*.code-workspace
+.vscode/
+
+.DS_Store
+
+HW_01_example/
+experiments/
+lightning_logs/
+MISC/
+venv/
+data/images/
+
+data/images/
+data/images_ini/
+
+*.ckpt
+*.pt
+*.onnx
