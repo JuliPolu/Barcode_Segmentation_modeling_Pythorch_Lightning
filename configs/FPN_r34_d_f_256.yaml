@@ -3,6 +3,7 @@ experiment_name: 'FPN_exp2_r34_d_f_256'
 n_epochs:  40
 accelerator: 'gpu'
 device: 0
+log_every_epochs: 20
 monitor_metric: 'val_IoU'
 monitor_mode: 'max'
 threshold: 0.5
@@ -15,7 +16,7 @@ model_kwargs:
     encoder_weights: "imagenet"
     in_channels: 3
     classes: 1
-    
+
 optimizer: 'torch.optim.AdamW'
 optimizer_kwargs:
   lr: 1e-3
@@ -41,6 +42,7 @@ data_config:
   batch_size: 16
   n_workers: 4
   train_size: 0.8
+  test_size: 0.25
   width: 256
   height: 256
   encoder_name: 'resnet34'

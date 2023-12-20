@@ -25,8 +25,13 @@ MISC/
 venv/
 data/images/
 
-data/images/
-data/images_ini/
+data/df_test.csv
+data/df_train.csv
+data/df_valid.csv
+data/README.md
+
+README_FOR_FUTURE.md
+
 
 *.ckpt
 *.pt

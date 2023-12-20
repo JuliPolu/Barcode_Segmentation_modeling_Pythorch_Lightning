@@ -1,4 +1,4 @@
-import importlib
+import importlib  # noqa: WPS100
 from typing import Any
 
 

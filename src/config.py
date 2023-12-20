@@ -1,4 +1,5 @@
 from typing import List
+
 from omegaconf import OmegaConf
 from pydantic import BaseModel
 
@@ -14,6 +15,7 @@ class DataConfig(BaseModel):
     batch_size: int
     n_workers: int
     train_size: float
+    test_size: float
     width: int
     height: int
     encoder_name: str
@@ -30,6 +32,7 @@ class Config(BaseModel):
     device: int
     monitor_metric: str
     monitor_mode: str
+    log_every_epochs: int
     model_kwargs: dict
     optimizer: str
     optimizer_kwargs: dict

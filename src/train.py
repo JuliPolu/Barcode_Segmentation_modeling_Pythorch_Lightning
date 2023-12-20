@@ -1,14 +1,20 @@
 import argparse
 import logging
-import os
-import torch
+from pathlib import Path
+
 import pytorch_lightning as pl
+import torch
 from clearml import Task
-from pytorch_lightning.callbacks import EarlyStopping, LearningRateMonitor, ModelCheckpoint
-from config import Config
-from constants import EXPERIMENTS_PATH
-from datamodule import SegmentDM
-from lightning_module import SegmentModule
+from pytorch_lightning.callbacks import (
+    EarlyStopping,
+    LearningRateMonitor,
+    ModelCheckpoint,
+)
+
+from src.config import Config
+from src.constants import EXPERIMENTS_PATH
+from src.datamodule import SegmentDM
+from src.lightning_module import SegmentModule
 
 
 def arg_parse():
@@ -28,11 +34,11 @@ def train(config: Config):
     )
     task.connect(config.dict())
 
-    experiment_save_path = os.path.join(EXPERIMENTS_PATH, config.experiment_name)
-    os.makedirs(experiment_save_path, exist_ok=True)
+    experiment_save_path = Path(EXPERIMENTS_PATH) / config.experiment_name
+    experiment_save_path.mkdir(parents=True, exist_ok=True)
 
     checkpoint_callback = ModelCheckpoint(
-        experiment_save_path,
+        str(experiment_save_path),
         monitor=config.monitor_metric,
         mode=config.monitor_mode,
         save_top_k=1,
@@ -42,7 +48,7 @@ def train(config: Config):
         max_epochs=config.n_epochs,
         accelerator=config.accelerator,
         devices=[config.device],
-        log_every_n_steps=8,
+        log_every_n_steps=config.log_every_epochs,
         callbacks=[
             checkpoint_callback,
             EarlyStopping(monitor=config.monitor_metric, patience=10, mode=config.monitor_mode),

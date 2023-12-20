@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from typing import List
+
 from torch import nn
-import torch.nn.functional as F
-from config import LossConfig
-from utils import load_object
+
+from src.config import LossConfig
+from src.utils import load_object
 
 
 @dataclass
-class Loss:
+class Loss(object):
     name: str
     weight: float
     loss: nn.Module
