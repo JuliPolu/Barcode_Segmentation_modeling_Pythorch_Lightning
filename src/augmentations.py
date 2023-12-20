@@ -1,27 +1,26 @@
 from typing import Union
-import numpy as np
 
 import albumentations as albu
-from albumentations.pytorch import ToTensorV2
+import numpy as np
 import segmentation_models_pytorch as smp
+from albumentations.pytorch import ToTensorV2
 
 TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 
 
-def to_uint8(image, **kwargs):
+def to_uint8(image: np.ndarray) -> np.ndarray:
     return image.astype(np.uint8)
 
 
-def get_transforms(
+def get_transforms(  # noqa: WPS211
     width: int,
     height: int,
+    encoder: str,
     preprocessing: bool = True,
-    encoder=None,
     pretrained: str = 'imagenet',
     augmentations: bool = True,
     postprocessing: bool = True,
 ) -> TRANSFORM_TYPE:
-
     transforms = []
     if preprocessing:
         transforms.append(albu.Resize(height=height, width=width))
@@ -46,7 +45,7 @@ def get_transforms(
                             contrast_limit=0.2,
                             brightness_by_max=True,
                             p=0.5,
-                            ),
+                        ),
                     ],
                     p=0.3,
                 ),

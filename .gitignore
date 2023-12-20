@@ -1,20 +1,37 @@
+# Jupyter Notebook
 .ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
 __pycache__
-.vscode
-.DS_Stor
 
+# VSCode
+*.code-workspace
+.vscode/
 
+.DS_Store
 
 HW_01_example/
-README.md
 experiments/
 lightning_logs/
-segmentation_test.ipynb
-HISTORY&COMMENTS.md
-lightning_logs/
-
+MISC/
 venv/
 data/images/
+
+data/df_test.csv
+data/df_train.csv
+data/df_valid.csv
+data/README.md
+
+README_FOR_FUTURE.md
+
 
 *.ckpt
 *.pt

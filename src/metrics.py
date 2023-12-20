@@ -1,4 +1,4 @@
-from torchmetrics import MetricCollection, F1Score, JaccardIndex
+from torchmetrics import F1Score, JaccardIndex, MetricCollection
 
 
 def get_metrics(**kwargs) -> MetricCollection:

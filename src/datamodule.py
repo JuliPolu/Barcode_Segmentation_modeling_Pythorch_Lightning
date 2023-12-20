@@ -1,36 +1,50 @@
 import logging
-import os
+from pathlib import Path
 from typing import Optional
 
+import numpy as np
 import pandas as pd
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
-from augmentations import get_transforms
-from config import DataConfig
-from dataset import SegmentationDataset
-from dataset_splitter import split_subsets
+from src.augmentations import get_transforms
+from src.config import DataConfig
+from src.dataset import SegmentationDataset
+from src.dataset_splitter import split_subsets
 
 
 class SegmentDM(LightningDataModule):
     def __init__(self, config: DataConfig):
         super().__init__()
         self._config = config
-        self._train_transforms = get_transforms(width=config.width, height=config.height, encoder = config.encoder_name)
-        self._valid_transforms = get_transforms(width=config.width, height=config.height, encoder = config.encoder_name, augmentations=False)
-        self._image_folder = os.path.normpath(config.data_path)
+        self._train_transforms = get_transforms(
+            width=config.width,
+            height=config.height,
+            encoder=config.encoder_name,
+        )  # noqa: WPS221, E501
+        self._valid_transforms = get_transforms(
+            width=config.width,
+            height=config.height,
+            encoder=config.encoder_name,
+            augmentations=False,
+        )
+        self._image_folder = Path(self._config.data_path).resolve()
 
         self.train_dataset: Optional[Dataset] = None
         self.valid_dataset: Optional[Dataset] = None
         self.test_dataset: Optional[Dataset] = None
 
     def prepare_data(self):
-        split_and_save_datasets(self._config.data_path, self._config.train_size)
+        split_and_save_datasets(
+            Path(self._config.data_path),
+            self._config.train_size,
+            self._config.test_size,
+        )
 
     def setup(self, stage: Optional[str] = None):
         if stage == 'fit':
-            df_train = read_df(self._config.data_path, 'train')
-            df_valid = read_df(self._config.data_path, 'valid')
+            df_train = read_df(Path(self._config.data_path), 'train')
+            df_valid = read_df(Path(self._config.data_path), 'valid')
             self.train_dataset = SegmentationDataset(
                 df_train,
                 image_folder=self._image_folder,
@@ -43,7 +57,7 @@ class SegmentDM(LightningDataModule):
             )
 
         elif stage == 'test':
-            df_test = read_df(self._config.data_path, 'test')
+            df_test = read_df(Path(self._config.data_path), 'test')
             self.test_dataset = SegmentationDataset(
                 df_test,
                 image_folder=self._image_folder,
@@ -81,9 +95,8 @@ class SegmentDM(LightningDataModule):
         )
 
 
-def split_and_save_datasets(data_path: str, train_fraction: float = 0.8):
-    df_path = os.path.join(data_path, 'annotations.tsv')
-    df_path = os.path.normpath(df_path)
+def split_and_save_datasets(data_path: str, train_fraction: float = 0.8) -> None:
+    df_path = data_path / 'annotations.tsv'
     df = pd.read_csv(df_path, delimiter='\t')
     logging.info(f'Original dataset: {len(df)}')
     df = df.drop_duplicates()
@@ -95,12 +108,12 @@ def split_and_save_datasets(data_path: str, train_fraction: float = 0.8):
     logging.info(f'Valid dataset: {len(valid_df)}')
     logging.info(f'Test dataset: {len(test_df)}')
 
-    train_df.to_csv(os.path.join(data_path, 'df_train.csv'), index=False)
-    valid_df.to_csv(os.path.join(data_path, 'df_valid.csv'), index=False)
-    test_df.to_csv(os.path.join(data_path, 'df_test.csv'), index=False)
+    train_df.to_csv(data_path / 'df_train.csv', index=False)
+    valid_df.to_csv(data_path / 'df_valid.csv', index=False)
+    test_df.to_csv(data_path / 'df_test.csv', index=False)
     logging.info('Datasets successfully saved!')
-    return 
 
 
-def read_df(data_path: str, mode: str) -> pd.DataFrame:
-    return pd.read_csv(os.path.normpath(os.path.join(data_path, f'df_{mode}.csv')))
+def read_df(data_path: Path, mode: str) -> np.ndarray:
+    df = pd.read_csv(data_path / f'df_{mode}.csv')
+    return df.to_numpy()

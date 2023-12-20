@@ -1,18 +1,19 @@
-import os
+from pathlib import Path
 from typing import Optional, Union
 
 import albumentations as albu
-import cv2
+import jpeg4py as jpeg
 import numpy as np
-import pandas as pd
 from torch.utils.data import Dataset
 
 TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 
+
 class SegmentationDataset(Dataset):
-    def __init__(self,
-        dataframe: pd.DataFrame,
-        image_folder: str,
+    def __init__(
+        self,
+        dataframe: np.ndarray,
+        image_folder: Path,
         transforms: Optional[TRANSFORM_TYPE] = None,
     ):
         self.dataframe = dataframe
@@ -22,21 +23,19 @@ class SegmentationDataset(Dataset):
     def __len__(self):
         return len(self.dataframe)
 
-    def __getitem__(self, idx):
-        row = self.dataframe.iloc[idx]
-        
+    def __getitem__(self, idx: int):  # noqa: WPS210
+        row = self.dataframe[idx]
+
         # Load image
-        image_path = os.path.normpath(os.path.join(self.image_folder, row['filename']))
-        
-        image = cv2.imread(image_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image_path = self.image_folder / row[0]
+        image = jpeg.JPEG(str(image_path)).decode()
 
         # Create mask
         mask = np.zeros(image.shape[:2], dtype=np.uint8)
-        x, y, w, h = row['x_from'], row['y_from'], row['width'], row['height']
-        mask[y:y+h, x:x+w] = 1
+        x_from, y_from, width, height = int(row[1]), int(row[2]), int(row[3]), int(row[4])  # noqa: WPS221
+        mask[y_from : y_from + height, x_from : x_from + width] = 1  # noqa: WPS221
         mask = mask.astype(np.uint8)
-        
+
         if self.transforms:
             transformed = self.transforms(image=image, mask=mask)
             transformed_image = transformed['image']
@@ -45,6 +44,5 @@ class SegmentationDataset(Dataset):
         else:
             transformed_image = image
             transformed_mask = mask
-            
+
         return transformed_image, transformed_mask
-    
